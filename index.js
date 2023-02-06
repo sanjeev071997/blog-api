@@ -10,6 +10,7 @@ import contactRouter from './routes/contact.js'
 import commentsRouter from './routes/comments.js'
 import errorMiddleware from './middleware/error.js';
 import cookieParser from 'cookie-parser';
+import path from 'path'
 
 // Handling Uncaught Exception
 process.on("uncaughtException", (err) => {
@@ -34,6 +35,12 @@ app.use('/api/auth', authRouter)
 app.use('/api/post', postRouter)
 app.use('/api/contact', contactRouter)
 app.use('/api/comments', commentsRouter)
+
+// Deployment 
+app.get('/', (req, res) => {
+    app.use(express.static(path.resolve(__dirname, 'build')))
+    res.sendFile(path.resolve(__dirname,'build', 'index.html'))
+});
 
 // Middleware for errors
 app.use(errorMiddleware)
