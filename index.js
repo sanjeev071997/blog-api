@@ -21,26 +21,27 @@ process.on("uncaughtException", (err) => {
 
 const app = express();
 app.use(express.json());
-app.use(cors({useCredentials: true} ));
+app.use(cors({ useCredentials: true }));
 app.use(fileUpload({
-    useTempFiles:true
-})); 
+    useTempFiles: true
+}));
 // app.use(fileUpload());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 const port = process.env.PORT || 8080;
 dotenv.config();
-app.use('/api/auth', authRouter)
-app.use('/api/post', postRouter)
-app.use('/api/contact', contactRouter)
-app.use('/api/comments', commentsRouter)
+app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/post', postRouter)
+app.use('/api/v1/contact', contactRouter)
+app.use('/api/v1/comments', commentsRouter)
 
-// Deployment 
-app.get('/', (req, res) => {
-    app.use(express.static(path.resolve(__dirname, 'build')))
-    res.sendFile(path.resolve(__dirname,'build', 'index.html'))
-});
+// static files
+app.use(express.static(path.join(__dirname, './client/build')))
+
+app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, './client/build/index.html'));
+})
 
 // Middleware for errors
 app.use(errorMiddleware)
