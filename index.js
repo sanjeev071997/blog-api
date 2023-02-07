@@ -11,6 +11,10 @@ import commentsRouter from './routes/comments.js'
 import errorMiddleware from './middleware/error.js';
 import cookieParser from 'cookie-parser';
 import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Handling Uncaught Exception
 process.on("uncaughtException", (err) => {
@@ -21,10 +25,10 @@ process.on("uncaughtException", (err) => {
 
 const app = express();
 app.use(express.json());
-app.use(cors({ useCredentials: true }));
+app.use(cors({useCredentials: true} ));
 app.use(fileUpload({
-    useTempFiles: true
-}));
+    useTempFiles:true
+})); 
 // app.use(fileUpload());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,11 +41,11 @@ app.use('/api/v1/contact', contactRouter)
 app.use('/api/v1/comments', commentsRouter)
 
 // static files
-app.use(express.static(path.join(__dirname, './client/build')))
+app.use(express.static(path.join(__dirname,  './client/build')));
 
-app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, './client/build/index.html'));
-})
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './client/build/index.html'))
+});
 
 // Middleware for errors
 app.use(errorMiddleware)
